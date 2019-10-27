@@ -29,7 +29,14 @@ SDL_Texture* loadTexture(const std::string& path, SDL_Renderer* renderer)
 
 Sprite::Sprite(const char* filename, SDL_Renderer* renderer)
 {
-	m_texture = loadTexture(filename, renderer);
+    std::string filenameStr(filename);
+    
+#ifdef __APPLE__
+    // Replace path separator
+    std::replace(filenameStr.begin(), filenameStr.end(), '\\', '/');
+#endif
+    
+	m_texture = loadTexture(filenameStr, renderer);
 
 	if (!m_texture)
 		throw SpriteLoadException();
