@@ -1,0 +1,151 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\newcommand{\colvec}[2]{\begin{pmatrix}#1\\#2\end{pmatrix}}
+
+\title{COMP270 Worksheet B solutions}
+\author{Edward Powley}
+
+\begin{document}
+\maketitle
+
+\section{Calculating the shot speed}
+
+Let $u$ and $\theta$ be defined as in the worksheet.
+Let $g$ be the acceleration due to gravity, and $x$ be the distance between the two tanks.
+Assume the position of the player tank is $\colvec{0}{0}$, so the position of the enemy tank is $\colvec{x}{0}$.
+
+The initial velocity of the projectile is
+$$ \mathbf{u} = \colvec{u\cos\theta}{u\sin\theta} $$
+When the projectile hits the enemy tank, its position relative to the origin is
+$$ \mathbf{s} = \colvec{x}{0} $$
+The acceleration on the projectile is
+$$ \mathbf{a} = \colvec{0}{-g} $$
+
+Substituting these into the equation of motion $\mathbf{s} = \mathbf{u}t + \frac12\mathbf{a}t^2$ gives
+$$ \colvec{x}{0} = \colvec{u\cos\theta}{u\sin\theta} t + \frac12 \colvec{0}{-g} t^2 $$
+
+Considering the $x$ and $y$ components separately gives two simultaneous equations:
+\begin{align}
+    x &= u \cos(\theta) t \tag{1} \\
+    0 &= u \sin(\theta) t - \frac12 g t^2 \tag{2}
+\end{align}
+We have two equations in two unknowns ($u$ and $t$), so we should be able to solve this.
+We want to find $u$, so let's begin by eliminating $t$.
+
+Rearranging (1) (dividing both sides by $u \cos\theta$ gives
+$$ t = \frac{x}{u \cos\theta} $$
+Substituting this into (2) gives
+$$ 0 = \frac{u \sin(\theta) x}{u \cos\theta} - \frac12 g \left(\frac{x}{u \cos\theta}\right)^2 $$
+Cancelling $u$, squaring $\frac{x}{u \cos\theta}$ and simplifying gives
+$$ 0 = \frac{x \sin\theta}{\cos\theta} - \frac{g x^2}{2 u^2 \cos^2 \theta} $$
+Now let's rearrange this to get a formula for $u$.
+
+Moving the second term from the right hand side to the left gives
+$$ \frac{g x^2}{2 u^2 \cos^2 \theta} = \frac{x \sin\theta}{\cos\theta} $$
+Moving $u^2$ to the right and everything else to the left gives
+$$ \frac{g x^2 \cos\theta}{2 x \sin\theta \cos^2 \theta} = u^2 $$
+Taking the square root and cancelling $x\cos\theta$ gives
+$$ u = \sqrt{\frac{g x}{2 \sin\theta \cos \theta}} $$
+Finally, applying the double angle formula for $\sin$ gives
+$$ u = \sqrt{\frac{g x}{\sin 2\theta}} $$
+
+\section{Accounting for height difference}
+
+Assume the position of the player tank is $\colvec{0}{0}$, and the position of the enemy tank is $\colvec{x}{y}$.
+Now $\mathbf{u}$ and $\mathbf{a}$ are as in Task 1, but we now have
+$$ \mathbf{s} = \colvec{x}{0} $$
+
+Again substituting into $\mathbf{s} = \mathbf{u}t + \frac12\mathbf{a}t^2$ gives
+$$ \colvec{x}{y} = \colvec{u\cos\theta}{u\sin\theta} t + \frac12 \colvec{0}{-g} t^2 $$
+which gives simultaneous equations
+\begin{align}
+    x &= u \cos(\theta) t \tag{1} \\
+    y &= u \sin(\theta) t - \frac12 g t^2 \tag{2}
+\end{align}
+Just as in Task 1, rearranging (1) gives 
+$$ t = \frac{x}{u \cos\theta} $$
+Substituting this into (2) and simplifying as before gives
+$$ y = \frac{x \sin\theta}{\cos\theta} - \frac{g x^2}{2 u^2 \cos^2 \theta} $$
+Rearranging terms gives
+$$ \frac{g x^2}{2 u^2 \cos^2 \theta} = \frac{x \sin\theta}{\cos\theta} - y $$
+Combining the right hand side into a single fraction gives
+$$ \frac{g x^2}{2 u^2 \cos^2 \theta} = \frac{x \sin\theta - y \cos\theta}{\cos\theta} $$
+Moving $u^2$ to the right and everything else to the left gives
+$$ \frac{g x^2 \cos\theta}{2 \cos^2 \theta (x \sin\theta - y \cos\theta)} = u^2 $$
+Cancelling $\cos\theta$ and multiplying out the denominator gives
+$$ u^2 = \frac{g x^2}{2x \sin\theta \cos\theta - 2y \cos^2\theta} $$
+Applying double angle formulae gives
+$$ u^2 = \frac{g x^2}{x \sin 2\theta - y (\cos 2\theta + 1)} $$
+Finally, taking the square root gives
+$$ u = \sqrt{\frac{g x^2}{x \sin 2\theta - y (\cos 2\theta + 1)}} $$
+
+Note that this working is done in a coordinate system where the $y$-axis points upwards,
+however in the program the $y$-axis points downwards.
+We compensate for this by flipping the sign of $y$, so we have
+$$ u = \sqrt{\frac{g x^2}{x \sin 2\theta + y (\cos 2\theta + 1)}} $$
+
+\section{Accounting for wind}
+We now have $\mathbf{u}$ and $\mathbf{s}$ as in the previous task, but
+$$ \mathbf{a} = \colvec{w}{-g} $$
+
+Again substituting into $\mathbf{s} = \mathbf{u}t + \frac12\mathbf{a}t^2$ gives
+$$ \colvec{x}{y} = \colvec{u\cos\theta}{u\sin\theta} t + \frac12 \colvec{w}{-g} t^2 $$
+which gives simultaneous equations
+\begin{align}
+    x &= u \cos(\theta) t + \frac12 w t^2 \tag{1} \\
+    y &= u \sin(\theta) t - \frac12 g t^2 \tag{2}
+\end{align}
+Multiplying (1) through by $g$ and (2) through by $w$ gives
+\begin{align}
+    gx &= gu \cos(\theta) t + \frac12 gw t^2 \\
+    wy &= wu \sin(\theta) t - \frac12 gw t^2
+\end{align}
+Adding both of these equations together gives
+$$ gx + wy = gu \cos(\theta) t + wu \sin(\theta) t $$
+(The $+\frac12 gw t^2$ and $-\frac12 gw t^2$ cancel out.)
+Rearranging gives
+$$ t = \frac{gx + wy}{u(g\cos\theta + w\sin\theta)} $$
+To make life easier, define
+$$ \alpha = \frac{gx + wy}{g\cos\theta + w\sin\theta} $$
+So now 
+$$ t = \frac{\alpha}{u} $$
+Substituting this into (2) gives
+$$ y = \frac{u \alpha \sin\theta}{u} - \frac{g \alpha^2}{2 u^2} $$
+Cancelling $u$ and rearranging gives
+$$ \frac{g \alpha^2}{2 u^2} = \alpha \sin\theta - y $$
+Further rearranging gives
+$$ \frac{g \alpha^2}{2 (\alpha \sin\theta - y)} = u^2 $$
+Taking the square root gives
+$$ u = \sqrt{\frac{g \alpha^2}{2 (\alpha \sin\theta - y)}} $$
+
+At this point we could substitute $\alpha$ back in and simplify, but this form is good enough for doing the calculation.
+
+\section{Calculating the shot angle}
+
+Let's look at the case with no wind (as in Task 2). From there we have
+$$ y = \frac{x \sin\theta}{\cos\theta} - \frac{g x^2}{2 u^2 \cos^2 \theta} $$
+From definition of $\sec$ we have
+$$ y = \frac{x \sin\theta}{\cos\theta} - \frac{g x^2 \sec^2\theta}{2 u^2} $$
+Applying identities $\tan = \frac{\sin}{\cos}$ and $1 + \tan^2 = \sec^2$ gives
+$$ y = x \tan\theta - \frac{g x^2 (1 + \tan^2\theta)}{2 u^2} $$
+Rearranging gives
+$$ \frac{g x^2}{2 u^2} \tan^2 \theta - x \tan\theta + \frac{g x^2}{2 u^2} + y = 0 $$
+This is a quadratic of the form
+$$ a \phi^2 + b \phi + c = 0 $$
+with
+\begin{align*}
+    \phi &= \tan\theta \quad\text{(to be found)} \\
+    a &= \frac{g x^2}{2 u^2} \\
+    b &= x \\
+    c &= \frac{g x^2}{2 u^2} + y
+\end{align*}
+Hence its solutions can be found using the quadratic formula
+$$ \phi = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$
+So the shot angle is
+$$ \theta = \tan^{-1}\left( \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \right) $$
+Note that there are two possible solutions (due to the $\pm$) --- hence there are two trajectories that hit the target.
+
+\end{document}
+
